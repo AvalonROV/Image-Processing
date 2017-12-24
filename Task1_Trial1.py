@@ -1,4 +1,6 @@
 #https://github.com/HUANGManutea/shapeDetection/blob/master/shapeDetect.py
+
+#THIS IS THE NEW VERSION
 import cv2
 import numpy as np
 import math
