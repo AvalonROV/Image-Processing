@@ -21,24 +21,31 @@ while True:
     _,frame=cap.read() #'_' is a value returned to this function, but we don't care about that value
     hsv=cv2.cvtColor(frame,cv2.COLOR_BGR2HSV)
 #HSV better than RGB, Each value in HSV are format, but in RGB these are dependent. V- Color Value, S - Satuation like intensity and H - hue -This dictates the color
- #This function are responsible for filtering colour
-#    lower_red=np.array([150,150,0])
-#    upper_red=np.array([180,255,255])
+# This function are responsible for filtering colour
+    lower_red=np.array([150,150,0])
+    upper_red=np.array([180,255,255])
     
 
 # You can apply filters which literally just blurs the images, thus ignoring any distrurbances
     lower_blue=np.array([100,150,0])
     upper_blue=np.array([140,255,255])
 
-#    lower_yellow=np.array([20, 100, 100])
-#    upper_yellow=np.array([30, 255, 255])
-#
-#    
-    mask=cv2.inRange(hsv,lower_blue,upper_blue)
-    res=cv2.bitwise_and(frame,frame,mask=mask)
-    median=cv2.medianBlur(res,15)
+    lower_yellow=np.array([20, 100, 100])
+    upper_yellow=np.array([30, 255, 255])
+
+    mask_red=cv2.inRange(hsv,lower_yellow,upper_yellow)
+    res_red=cv2.bitwise_and(frame,frame,mask_red=mask_red)
+    median_red=cv2.medianBlur(res_red,15)
     
-    edges=cv2.Canny(frame,100,200) # CHANGE THE 'FRAME' TO 'RES' FOR THE ORIGINAL CODE
+    mask_blue=cv2.inRange(hsv,lower_blue,upper_blue)
+    res_blue=cv2.bitwise_and(frame,frame,mask_blue=mask_blue)
+    median_blue=cv2.medianBlur(res_blue,15)
+    
+    mask_yellow=cv2.inRange(hsv,lower_yellow,upper_yellow)
+    res_yellow=cv2.bitwise_and(frame,frame,mask_yellow=mask_yellow)
+    median_yellow=cv2.medianBlur(res_yellow,15)
+    
+    edges=cv2.Canny(median,100,200) # CHANGE THE 'FRAME' TO 'RES' FOR THE ORIGINAL CODE
     canny2, contours, hierarchy = cv2.findContours(edges,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
     
     for i in range(0,len(contours)):
