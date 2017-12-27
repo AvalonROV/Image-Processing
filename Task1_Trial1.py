@@ -39,7 +39,6 @@ def areaCalculate(median_value):
     for plc,contour in enumerate(contours):
         area=cv2.contourArea(contour)
         if area>300:
-           # print("YESYESYES")
             return 1
         else:
             return 2
@@ -63,37 +62,16 @@ def shapeIdentifier(median_value,name_tri,name_rectangle):
                 x,y,w,h = cv2.boundingRect(contours[i])
                 cv2.putText(frame,name_tri,(x,y),cv2.FONT_HERSHEY_SIMPLEX,scale,(255,255,255),2,cv2.LINE_AA)
                 cv2.rectangle(frame,(x,y),(x+w,y+h),(255,0,0),2)
+            
             elif(len(approx)>=4 and len(approx)<=6):
-                #nb vertices of a polygonal curve
                 vtc = len(approx)
-                #get cos of all corners
-                cos = []
-                for j in range(2,vtc+1):
-                    cos.append(angle(approx[j%vtc],approx[j-2],approx[j-1]))
-                #sort ascending cos
-                cos.sort()
-                #get lowest and highest
-                mincos = cos[0]
-                maxcos = cos[-1]
-    
-                #Use the degrees obtained above and the number of vertices
-                #to determine the shape of the contour
                 x,y,w,h = cv2.boundingRect(contours[i])
+                #Rectangle
                 if(vtc==4):
                     cv2.putText(frame,name_rectangle,(x,y),cv2.FONT_HERSHEY_SIMPLEX,scale,(255,255,255),2,cv2.LINE_AA)
-                    #cv2.line(frame,'RECT',(x,y),cv2.FONT_HERSHEY_SIMPLEX,scale,(255,255,255),2,cv2.LINE_AA)
                     cv2.rectangle(frame,(x,y),(x+w,y+h),(255,0,0),2)
-    #            elif(vtc==5):
-    #                cv2.putText(median,'PENTA',(x,y),cv2.FONT_HERSHEY_SIMPLEX,scale,(255,255,255),2,cv2.LINE_AA)
-    #            elif(vtc==6):
-    #                cv2.putText(median,'HEXA',(x,y),cv2.FONT_HERSHEY_SIMPLEX,scale,(255,255,255),2,cv2.LINE_AA)
             else:
-                #detect and label circle
-                area = cv2.contourArea(contours[i])
-                x,y,w,h = cv2.boundingRect(contours[i])
-                radius = w/2
-    #            if(abs(1 - (float(w)/h))<=2 and abs(1-(area/(math.pi*radius*radius)))<=0.2):
-    #                cv2.putText(median,'CIRC',(x,y),cv2.FONT_HERSHEY_SIMPLEX,scale,(255,255,255),2,cv2.LINE_AA) 
+                None
      
 
 while True:
@@ -125,22 +103,9 @@ while True:
         shapeIdentifier(median_value,'TRI_Y','RECT_Y')
     else:
         print('NO TAIL DETECTED')
-
-    #edges=cv2.Canny(median_value,100,200)
-    #print()
-    #print(median_yellow)
-#    if(area_red==1 or area_blue==1 or area_yellow==1):
-#        print("we")
-#        shapeIdentifier(median_value,'TRI_Y','RECT_Y')
-        
-#    kernel=np.ones((15,15),np.float32)/(15*15)
-#    smooth=cv2.filter2D(res,-1,kernel)
     
     cv2.imshow('frame',frame)
-    #cv2.imshow('mask',mask)
-    #cv2.imshow('res',res)
-    #cv2.imshow('smooth',smooth)
-    #cv2.imshow('egdes',edges)
+
     
     k=cv2.waitKey(5) & 0xFF
     if k==27:
