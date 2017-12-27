@@ -27,6 +27,7 @@ lower_yellow=np.array([20, 100, 100])
 upper_yellow=np.array([30, 255, 255])
 
 def changeFrameColour(lower_value,upper_value):
+    hsv=cv2.cvtColor(frame,cv2.COLOR_BGR2HSV)
     mask=cv2.inRange(hsv,lower_value,upper_value)
     res=cv2.bitwise_and(frame,frame,mask=mask)
     median_value=cv2.medianBlur(res,15)
@@ -46,13 +47,11 @@ def areaCalculate(median_value):
 def shapeIdentifier(median_value,name_tri,name_rectangle):
         edges=cv2.Canny(median_value,100,200) # CHANGE THE 'FRAME' TO 'RES' FOR THE ORIGINAL CODE
         canny2, contours, hierarchy = cv2.findContours(edges,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
-    #
+
         for i in range(0,len(contours)):
-    
             #approximate the contour with accuracy proportional to
             #the contour perimeter
             approx = cv2.approxPolyDP(contours[i],cv2.arcLength(contours[i],True)*0.02,True)
-    
             #Skip small or non-convex objects
             if(abs(cv2.contourArea(contours[i]))<100 or not(cv2.isContourConvex(approx))):
                 continue
@@ -76,8 +75,6 @@ def shapeIdentifier(median_value,name_tri,name_rectangle):
 
 while True:
     _,frame=cap.read() #'_' is a value returned to this function, but we don't care about that value
-    hsv=cv2.cvtColor(frame,cv2.COLOR_BGR2HSV)
-
 
     median_red=changeFrameColour(lower_red,upper_red)
     area_red=areaCalculate(median_red)
@@ -97,7 +94,7 @@ while True:
         cv2.imshow('median',median_blue)
         median_value=median_blue
         shapeIdentifier(median_value,'TRI_B','RECT_B')
-    elif(area_yellow==1):
+    if(area_yellow==1):
         cv2.imshow('median',median_yellow)
         median_value=median_yellow
         shapeIdentifier(median_value,'TRI_Y','RECT_Y')
