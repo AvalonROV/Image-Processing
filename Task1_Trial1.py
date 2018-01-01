@@ -1,7 +1,11 @@
+# SKIP FRAMES to increase the speed
+
 import cv2
 import numpy as np
 import math
 cap=cv2.VideoCapture(0)
+cap.set(3,320)
+cap.set(4,240)
 # If use an image, then not infinite loop and also use imread instead of Frame
 
 
@@ -13,7 +17,6 @@ def angle(pt1,pt2,pt0):
     return float((dx1*dx2 + dy1*dy2))/math.sqrt(float((dx1*dx1 + dy1*dy1))*(dx2*dx2 + dy2*dy2) + 1e-10)
     
 scale=2
-
 #HSV better than RGB, Each value in HSV are format, but in RGB these are dependent. V- Color Value, S - Satuation like intensity and H - hue -This dictates the color
 # This function are responsible for filtering colour
 lower_red=np.array([150,150,0])
@@ -99,14 +102,14 @@ while True:
         median_value=median_yellow
         shapeIdentifier(median_value,'TRI_Y','RECT_Y')
     else:
-        print('NO TAIL DETECTED')
+        #print('')
+        None
     
     cv2.imshow('frame',frame)
 
     
-    k=cv2.waitKey(5) & 0xFF
-    if k==27:
-        break
+    cv2.waitKey(1000)
+
     
 cv2.destroyAllWindows()
 cap.release()
