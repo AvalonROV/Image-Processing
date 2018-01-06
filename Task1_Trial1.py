@@ -90,15 +90,15 @@ while True:
     
     #Using elif instead of multiple If's as the program should detect only one colour at a time
     if(area_red==1): #MAKE THE CONDITION THAT ONLY DETECT ONE COLOUR  AT TIME , X==1 AND Y!=1 AND Z!=1
-        cv2.imshow('median',median_red)
+        #cv2.imshow('median',median_red)
         median_value=median_red
         shapeIdentifier(median_value,'TRI_R','RECT_R')
     elif(area_blue==1):
-        cv2.imshow('median',median_blue)
+        #cv2.imshow('median',median_blue)
         median_value=median_blue
         shapeIdentifier(median_value,'TRI_B','RECT_B')
     if(area_yellow==1):
-        cv2.imshow('median',median_yellow)
+        #cv2.imshow('median',median_yellow)
         median_value=median_yellow
         shapeIdentifier(median_value,'TRI_Y','RECT_Y')
     else:
@@ -106,9 +106,8 @@ while True:
         None
     
     cv2.imshow('frame',frame)
-
-    
-    cv2.waitKey(1000)
+        
+    cv2.waitKey(10)
 
     
 cv2.destroyAllWindows()
