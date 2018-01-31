@@ -117,8 +117,5 @@ while True:
         None
         
     cv2.imshow('frame',frame)
-    cv2.waitKey(10)
-
     
-#cv2.destroyAllWindows()
-#cap.release()
+
