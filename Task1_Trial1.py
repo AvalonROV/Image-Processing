@@ -58,13 +58,14 @@ def shapeIdentifier(median_value,name_tri,name_rectangle):
             #Skip small or non-convex objects
             if(abs(cv2.contourArea(contours[i]))<100 or not(cv2.isContourConvex(approx))):
                 continue
-    
+
             #triangle
             if(len(approx)==3):
                 x,y,w,h = cv2.boundingRect(contours[i])
                 cv2.putText(frame,name_tri,(x,y),cv2.FONT_HERSHEY_SIMPLEX,scale,(255,255,255),2,cv2.LINE_AA)
                 cv2.rectangle(frame,(x,y),(x+w,y+h),(255,0,0),2)
-            
+                cv2.imshow('edges',edges)
+                print("TRIANGLE")
             elif(len(approx)>=4 and len(approx)<=6):
                 vtc = len(approx)
                 cos = []
@@ -83,6 +84,7 @@ def shapeIdentifier(median_value,name_tri,name_rectangle):
                 if(vtc==4):
                     cv2.putText(frame,name_rectangle,(x,y),cv2.FONT_HERSHEY_SIMPLEX,scale,(255,255,255),2,cv2.LINE_AA)
                     cv2.rectangle(frame,(x,y),(x+w,y+h),(255,0,0),2)
+                    cv2.imshow('edges',edges)
             else:
                 None
      
@@ -100,7 +102,6 @@ while True:
     
     #Using elif instead of multiple If's as the program should detect only one colour at a time
     if(area_red==1): #MAKE THE CONDITION THAT ONLY DETECT ONE COLOUR  AT TIME , X==1 AND Y!=1 AND Z!=1
-        cv2.imshow('median',median_red)
         median_value=median_red
         shapeIdentifier(median_value,'TRI_R','RECT_R')
     elif(area_blue==1):
@@ -114,10 +115,10 @@ while True:
     else:
         #print('')
         None
-    
+        
     cv2.imshow('frame',frame)
     cv2.waitKey(10)
 
     
-cv2.destroyAllWindows()
-cap.release()
+#cv2.destroyAllWindows()
+#cap.release()
