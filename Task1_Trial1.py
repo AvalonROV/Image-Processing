@@ -60,13 +60,24 @@ def shapeIdentifier(median_value,name_tri,name_rectangle):
                 continue
     
             #triangle
-            if(len(approx) == 3):
+            if(len(approx)==3):
                 x,y,w,h = cv2.boundingRect(contours[i])
                 cv2.putText(frame,name_tri,(x,y),cv2.FONT_HERSHEY_SIMPLEX,scale,(255,255,255),2,cv2.LINE_AA)
                 cv2.rectangle(frame,(x,y),(x+w,y+h),(255,0,0),2)
             
             elif(len(approx)>=4 and len(approx)<=6):
                 vtc = len(approx)
+                cos = []
+                for j in range(2,vtc+1):
+                    cos.append(angle(approx[j%vtc],approx[j-2],approx[j-1]))
+            #sort ascending cos
+                cos.sort()
+            #get lowest and highest
+                mincos = cos[0]
+                maxcos = cos[-1]
+
+            #Use the degrees obtained above and the number of vertices
+            #to determine the shape of the contour
                 x,y,w,h = cv2.boundingRect(contours[i])
                 #Rectangle
                 if(vtc==4):
@@ -75,7 +86,6 @@ def shapeIdentifier(median_value,name_tri,name_rectangle):
             else:
                 None
      
-
 while True:
     _,frame=cap.read() #'_' is a value returned to this function, but we don't care about that value
 
@@ -94,11 +104,11 @@ while True:
         median_value=median_red
         shapeIdentifier(median_value,'TRI_R','RECT_R')
     elif(area_blue==1):
-        cv2.imshow('median',median_blue)
+        #cv2.imshow('median',median_blue)
         median_value=median_blue
         shapeIdentifier(median_value,'TRI_B','RECT_B')
     if(area_yellow==1):
-        cv2.imshow('median',median_yellow)
+        #cv2.imshow('median',median_yellow)
         median_value=median_yellow
         shapeIdentifier(median_value,'TRI_Y','RECT_Y')
     else:
@@ -106,9 +116,7 @@ while True:
         None
     
     cv2.imshow('frame',frame)
-
-    
-    cv2.waitKey(1000)
+    cv2.waitKey(10)
 
     
 cv2.destroyAllWindows()
