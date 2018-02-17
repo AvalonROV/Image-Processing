@@ -1,21 +1,12 @@
-# SKIP FRAMES to increase the speed
+#!/usr/local/bin/python3
 
 import cv2
 import numpy as np
-import math
 cap=cv2.VideoCapture(0)
 cap.set(3,320)
 cap.set(4,240)
 # If use an image, then not infinite loop and also use imread instead of Frame
 
-
-def angle(pt1,pt2,pt0):
-    dx1 = pt1[0][0] - pt0[0][0]
-    dy1 = pt1[0][1] - pt0[0][1]
-    dx2 = pt2[0][0] - pt0[0][0]
-    dy2 = pt2[0][1] - pt0[0][1]
-    return float((dx1*dx2 + dy1*dy2))/math.sqrt(float((dx1*dx1 + dy1*dy1))*(dx2*dx2 + dy2*dy2) + 1e-10)
-    
 scale=2
 #HSV better than RGB, Each value in HSV are format, but in RGB these are dependent. V- Color Value, S - Satuation like intensity and H - hue -This dictates the color
 # This function are responsible for filtering colour
@@ -54,31 +45,21 @@ def shapeIdentifier(median_value,name_tri,name_rectangle):
         for i in range(0,len(contours)):
             #approximate the contour with accuracy proportional to
             #the contour perimeter
-            approx = cv2.approxPolyDP(contours[i],cv2.arcLength(contours[i],True)*0.02,True)
+            approx = cv2.approxPolyDP(contours[i],cv2.arcLength(contours[i],True)*0.105,True)
             #Skip small or non-convex objects
             if(abs(cv2.contourArea(contours[i]))<100 or not(cv2.isContourConvex(approx))):
                 continue
 
             #triangle
-            if(len(approx)==3):
+            if(len(approx)<=3):
                 x,y,w,h = cv2.boundingRect(contours[i])
                 cv2.putText(frame,name_tri,(x,y),cv2.FONT_HERSHEY_SIMPLEX,scale,(255,255,255),2,cv2.LINE_AA)
                 cv2.rectangle(frame,(x,y),(x+w,y+h),(255,0,0),2)
                 cv2.imshow('edges',edges)
+                #cv2.imshow('m',median_value)
                 print("TRIANGLE")
-            elif(len(approx)>=4 and len(approx)<=6):
+            elif(len(approx)>=4):
                 vtc = len(approx)
-                cos = []
-                for j in range(2,vtc+1):
-                    cos.append(angle(approx[j%vtc],approx[j-2],approx[j-1]))
-            #sort ascending cos
-                cos.sort()
-            #get lowest and highest
-                mincos = cos[0]
-                maxcos = cos[-1]
-
-            #Use the degrees obtained above and the number of vertices
-            #to determine the shape of the contour
                 x,y,w,h = cv2.boundingRect(contours[i])
                 #Rectangle
                 if(vtc==4):
@@ -113,9 +94,10 @@ while True:
         median_value=median_yellow
         shapeIdentifier(median_value,'TRI_Y','RECT_Y')
     else:
-        #print('')
         None
         
     cv2.imshow('frame',frame)
+    cv2.waitKey(1)
     
-
+cap.release()
+cv2.destroyAllWindows()
