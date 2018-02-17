@@ -2,6 +2,8 @@
 
 import cv2
 import numpy as np
+from PIL import Image, ImageEnhance
+
 cap=cv2.VideoCapture(0)
 cap.set(3,320)
 cap.set(4,240)
@@ -71,7 +73,26 @@ def shapeIdentifier(median_value,name_tri,name_rectangle):
      
 while True:
     _,frame=cap.read() #'_' is a value returned to this function, but we don't care about that value
+    
+    frame=Image.fromarray(frame)
+    enhancer = ImageEnhance.Contrast(frame)
 
+    factor =  1 #CHANG FOR CONTRAST
+    image=enhancer.enhance(factor)
+    #frame = np.array(image).reshape((image.height, image.width,3))
+    
+    enhancer=ImageEnhance.Brightness(image)
+    
+    factor =  1 #CHANGE FOR BRIGHTNESS
+    image=enhancer.enhance(factor)
+    frame = np.array(image).reshape((image.height, image.width,3))
+    
+    enhancer=ImageEnhance.Sharpness(image) 
+    factor =  1 #CHANGE FOR SHARPNESS
+    image=enhancer.enhance(factor)
+    frame = np.array(image).reshape((image.height, image.width,3))
+    
+    
     median_red=changeFrameColour(lower_red,upper_red)
     area_red=areaCalculate(median_red)
     
