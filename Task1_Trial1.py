@@ -48,7 +48,7 @@ def areaCalculate(median_value):
             return 2
 
 def shapeIdentifier(median_value,name_tri,name_rectangle):
-        edges=cv2.Canny(median_value,100,200) # CHANGE THE 'FRAME' TO 'RES' FOR THE ORIGINAL CODE
+        edges=cv2.Canny(median_value,100,200)
         canny2, contours, hierarchy = cv2.findContours(edges,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
 
         for i in range(0,len(contours)):
