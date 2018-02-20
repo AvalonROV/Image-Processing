@@ -4,7 +4,9 @@ import cv2
 import numpy as np
 from PIL import Image, ImageEnhance
 
-cap=cv2.VideoCapture(0)
+#cap=cv2.VideoCapture(0)
+cap = cv2.VideoCapture('Test1_UnderwaterT.mp4')
+
 cap.set(3,320)
 cap.set(4,240)
 # If use an image, then not infinite loop and also use imread instead of Frame
@@ -35,7 +37,7 @@ def areaCalculate(median_value):
     
     for plc,contour in enumerate(contours):
         area=cv2.contourArea(contour)
-        if area>300:
+        if area>200:
             return 1
         else:
             return 2
@@ -106,14 +108,18 @@ while True:
     if(area_red==1): #MAKE THE CONDITION THAT ONLY DETECT ONE COLOUR  AT TIME , X==1 AND Y!=1 AND Z!=1
         median_value=median_red
         shapeIdentifier(median_value,'TRI_R','RECT_R')
+        cv2.imshow('m',median_red)
     elif(area_blue==1):
         #cv2.imshow('median',median_blue)
         median_value=median_blue
         shapeIdentifier(median_value,'TRI_B','RECT_B')
+        cv2.imshow('m',median_blue)
     if(area_yellow==1):
         #cv2.imshow('median',median_yellow)
         median_value=median_yellow
         shapeIdentifier(median_value,'TRI_Y','RECT_Y')
+        cv2.imshow('m',median_yellow)
+
     else:
         None
         
