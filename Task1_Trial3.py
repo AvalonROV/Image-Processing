@@ -1,23 +1,23 @@
-#•	https://www.pyimagesearch.com/2017/09/18/real-time-object-detection-with-deep-learning-and-opencv/
-
-
+#THIS ALGORITHM FIRST DETECTS THE SHAPE AND THEN THE COLOUR. IT USES THE MEAN VALUE TO 
+# TO COMPARE THE RED, GREEN AND BLUE COLOR#
 import cv2
 import numpy as np
 from PIL import Image, ImageEnhance
 
-cap = cv2.VideoCapture('Test1_UnderwaterT.mp4')
-#cap = cv2.VideoCapture(0)
-cap.set(3,100)
-cap.set(4,100)
+#cap = cv2.VideoCapture('Test1_UnderwaterT.mp4')
+cap = cv2.VideoCapture(0)
+cap.set(3,320)
+cap.set(4,240)
 
-#lower_red=np.array([150,150,0])
-#upper_red=np.array([180,255,255])
-
-lower_red=np.array([0,0,120])
+lower_red=np.array([150,150,0])
 upper_red=np.array([180,255,255])
 
+# You can apply filters which literally just blurs the images, thus ignoring any distrurbances
 lower_blue=np.array([100,150,0])
 upper_blue=np.array([140,255,255])
+
+lower_yellow=np.array([20, 100, 100])
+upper_yellow=np.array([30, 255, 255])
 
 
 #while True:
@@ -70,20 +70,19 @@ while(cap.isOpened()):
                     cv2.putText(frame,'TRI_R',(x,y),cv2.FONT_HERSHEY_SIMPLEX,2,(255,255,255),2,cv2.LINE_AA)
                 else:
                     cv2.putText(frame,'TRI_Y',(x,y),cv2.FONT_HERSHEY_SIMPLEX,2,(255,255,255),2,cv2.LINE_AA)
-    
+
             elif(len(approx)>=4):
                 vtc = len(approx)
                 x,y,w,h = cv2.boundingRect(contours[i])
                 cv2.rectangle(frame,(x,y),(x+w,y+h),(255,0,0),2)
                 mean_val = cv2.mean(contours[i]) # the means of the blue, green, and red channels, respectively            
-                if(mean_val[0]>mean_val[1] and (mean_val[0]>mean_val[2])):
+                if((mean_val[0]>mean_val[1]) and (mean_val[0]>mean_val[2])):
                     cv2.putText(frame,'REC_B',(x,y),cv2.FONT_HERSHEY_SIMPLEX,2,(255,255,255),2,cv2.LINE_AA)
-                elif(mean_val[2]>mean_val[1] and (mean_val[2]>mean_val[0])):
+                elif((mean_val[2]>mean_val[1]) or (mean_val[2]>mean_val[0])):
                     cv2.putText(frame,'REC_R',(x,y),cv2.FONT_HERSHEY_SIMPLEX,2,(255,255,255),2,cv2.LINE_AA)
+                    print('I AM RED')
                 else:
                     cv2.putText(frame,'REC_Y',(x,y),cv2.FONT_HERSHEY_SIMPLEX,2,(255,255,255),2,cv2.LINE_AA)
-                #            cv2.imshow('edges',edges)
-    #            print("RECTANGLE")
             else:
                 print('None')
     

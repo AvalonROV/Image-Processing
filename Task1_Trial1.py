@@ -1,11 +1,10 @@
-#!/usr/local/bin/python3
-
+#THIS IS THE ORIGINAL CODE WRITTEN IN THE FIRST PLACE. IT DETECTS THE 
 import cv2
 import numpy as np
 from PIL import Image, ImageEnhance
 
 #cap=cv2.VideoCapture(0)
-cap = cv2.VideoCapture('Test1_UnderwaterT.mp4')
+cap = cv2.VideoCapture('test.mp4')
 
 cap.set(3,320)
 cap.set(4,240)
@@ -14,6 +13,7 @@ cap.set(4,240)
 scale=2
 #HSV better than RGB, Each value in HSV are format, but in RGB these are dependent. V- Color Value, S - Satuation like intensity and H - hue -This dictates the color
 # This function are responsible for filtering colour
+
 lower_red=np.array([150,150,0])
 upper_red=np.array([180,255,255])
 
@@ -37,7 +37,7 @@ def areaCalculate(median_value):
     
     for plc,contour in enumerate(contours):
         area=cv2.contourArea(contour)
-        if area>200:
+        if area>400:
             return 1
         else:
             return 2
@@ -51,7 +51,7 @@ def shapeIdentifier(median_value,name_tri,name_rectangle):
             #the contour perimeter
             approx = cv2.approxPolyDP(contours[i],cv2.arcLength(contours[i],True)*0.105,True)
             #Skip small or non-convex objects
-            if(abs(cv2.contourArea(contours[i]))<100 or not(cv2.isContourConvex(approx))):
+            if(abs(cv2.contourArea(contours[i]))<300 or not(cv2.isContourConvex(approx))):
                 continue
 
             #triangle
