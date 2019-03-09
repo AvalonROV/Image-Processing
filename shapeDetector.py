@@ -16,7 +16,7 @@ approx = []
 #scale of the text
 scale = 2
 #camera
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(0)
 print("press q to exit")
 
 # Define the codec and create VideoWriter object
@@ -45,7 +45,7 @@ while(cap.isOpened()):
         blur = cv2.GaussianBlur(gray, (5, 5), 0)
         ret,thresh1 = cv2.threshold(gray,60,250,cv2.THRESH_BINARY)
         #contours
-        canny2, contours, hierarchy = cv2.findContours(thresh1,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
+        canny2, contours, hierarchy = cv2.findContours(thresh1,cv2.RETR_CCOMP,cv2.CHAIN_APPROX_SIMPLE)
         for cnt in contours:
             #approximate the contour with accuracy proportional to
             #the contour perimeter
@@ -83,7 +83,13 @@ while(cap.isOpened()):
                 if(vtc==4):
                     squares = squares + 1
                     cv2.drawContours(frame, [approx], -1, (0,255,0), 3)
-                    cv2.putText(frame,'Square',(x,y),cv2.FONT_HERSHEY_SIMPLEX,scale,(255,255,255),2,cv2.LINE_AA)
+                    ar = w/float(h)
+                    if (ar >= 0.95 and ar <= 1.05):
+                        cv2.putText(frame,'Square',(x,y),cv2.FONT_HERSHEY_SIMPLEX,scale,(255,255,255),2,cv2.LINE_AA)
+                    else:
+                        cv2.putText(frame,'Rectangle',(x,y),cv2.FONT_HERSHEY_SIMPLEX,scale,(255,255,255),2,cv2.LINE_AA)
+
+                        
                 elif(vtc==5):
                     cv2.drawContours(frame, [approx], -1, (0,255,0), 3)
                     cv2.putText(frame,'PENTA',(x,y),cv2.FONT_HERSHEY_SIMPLEX,scale,(255,255,255),2,cv2.LINE_AA)
@@ -96,6 +102,7 @@ while(cap.isOpened()):
                 x,y,w,h = cv2.boundingRect(cnt)
                 radius = w/2
                 if(abs(1 - (float(w)/h))<=2 and abs(1-(area/(math.pi*radius*radius)))<=0.2):
+                    circles += 1
                     cv2.drawContours(frame, [approx], -1, (0,255,0), 3)
                     cv2.putText(frame,'CIRC',(x,y),cv2.FONT_HERSHEY_SIMPLEX,scale,(255,255,255),2,cv2.LINE_AA)
 
